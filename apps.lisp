@@ -25,6 +25,9 @@
  (defun stop-firefox ()
    (kill-firefox "-STOP"))
 
+ (defun continue-firefox ()
+   (kill-firefox "-CONT"))
+
  (defun block-screen ()
    (labels
        ((first-time ()
