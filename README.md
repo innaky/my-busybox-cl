@@ -1,4 +1,4 @@
-# my-busibox-cl
+# my-busybox-cl
 An small generic binary in common lisp.
 
 ## Usage:
@@ -14,7 +14,7 @@ You need install cl-launch
 (user) > mkdir ~/common-lisp
 
 ## clone repository
-(user) > git clone https://github.com/innaky/my-busibox-cl.git
+(user) > git clone https://github.com/innaky/my-busybox-cl.git
 
 ## Change the name of repository for functionality
 (user) > mv my-busibox-cl my-scripts
