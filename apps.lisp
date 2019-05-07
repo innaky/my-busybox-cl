@@ -10,7 +10,8 @@
 	   #:kill-firefox
 	   #:stop-firefox
 	   #:continue-firefox
-	   #:block-screen))
+	   #:block-screen
+	   #:random-password))
 
 (in-package :scripts/apps)
 
@@ -39,7 +40,14 @@
      (let ((timeone (first-time)))
        (exec)
        (format t "~a" (sec-to-hm
-		       (subtract-seconds timeone (second-time))))))))
+		       (subtract-seconds timeone (second-time)))))))
+
+ (defun random-password (length)
+   (let* ((new-length (car (to-integer length)))
+	  (string (make-string new-length)))
+     (map-into string (lambda (sym)
+			(declare (ignore sym))
+			(aref *symbols* (random (length *symbols*))))))))
 
 ;; INIT time functions
 
@@ -110,5 +118,19 @@ hour in seconds, minutes in seconds and the seconds."
   (if (> timeone timetwo)
       (error "Error: the last time is minor of first time.")
       (- timetwo timeone)))
+
+;; random-password-helper
+(defparameter *symbols*
+  (concatenate 'string
+	       "abcdefghijklmnopqrstuvwxyz"
+	       "0123456789"
+	       "ABCDEFGHIJKLMNOPQRSTUVWXYZ"
+	       "*./$%#@!+-[]&?"))
+
+(defun to-integer (string-number)
+  (if (stringp string-number)
+      (multiple-value-bind (int-part count-part)
+	  (parse-integer string-number)
+	(list int-part count-part))))
 
 (register-commands :scripts/apps)
