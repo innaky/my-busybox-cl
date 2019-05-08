@@ -5,13 +5,15 @@
 	  :uiop
 	  :inferior-shell
 	  :cl-scripting
+	  :md5
 	  :cl-launch/dispatch)
   (:export #:firefox
 	   #:kill-firefox
 	   #:stop-firefox
 	   #:continue-firefox
 	   #:block-screen
-	   #:random-password))
+	   #:random-password
+	   #:md5timestamp))
 
 (in-package :scripts/apps)
 
@@ -47,7 +49,10 @@
 	  (string (make-string new-length)))
      (map-into string (lambda (sym)
 			(declare (ignore sym))
-			(aref *symbols* (random (length *symbols*))))))))
+			(aref *symbols* (random (length *symbols*)))))))
+ (defun md5timestamp ()
+   (md5:md5sum-string
+    (write-to-string (get-universal-time)))))
 
 ;; INIT time functions
 
