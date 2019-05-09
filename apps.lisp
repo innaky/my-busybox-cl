@@ -12,8 +12,7 @@
 	   #:stop-firefox
 	   #:continue-firefox
 	   #:block-screen
-	   #:md5timestamp
-	   #:random-string))
+	   #:md5timestamp))
 
 (in-package :scripts/apps)
 
@@ -46,11 +45,7 @@
 
  (defun md5timestamp ()
    (md5:md5sum-string
-    (write-to-string (get-universal-time))))
-
- (defun random-string (length)
-   (let ((nw-length (car (to-integer length))))
-     (format nil "~{~a~}" (random-password nw-length)))))
+    (write-to-string (get-universal-time)))))
 
 ;; INIT time functions
 
@@ -121,29 +116,5 @@ hour in seconds, minutes in seconds and the seconds."
   (if (> timeone timetwo)
       (error "Error: the last time is minor of first time.")
       (- timetwo timeone)))
-
-;; random-string helper
-
-(defun to-integer (string-number)
-  (if (stringp string-number)
-      (multiple-value-bind (int-part count-part)
-	  (parse-integer string-number)
-	(list int-part count-part))))
-
-(defparameter *characters*
-  (concatenate 'string
-	       "abcdefghijklmnopqrstuvwxyz"
-	       "ABCDEFGHIJKLMNOPQRSTUVWXYZ"
-	       "0123456789"
-	       "!@#$%&/()=*-_.,;{}+[]"))
-
-(defun random-element (lst)
-  (aref lst (random (length lst))))
-
-(defun random-password (length)
-  (if (equal length 0)
-      nil
-      (cons (random-element *characters*)
-	    (random-password (- length 1)))))
 
 (register-commands :scripts/apps)
