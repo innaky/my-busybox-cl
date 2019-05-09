@@ -12,8 +12,8 @@
 	   #:stop-firefox
 	   #:continue-firefox
 	   #:block-screen
-	   #:random-password
-	   #:md5timestamp))
+	   #:md5timestamp
+	   #:random-string))
 
 (in-package :scripts/apps)
 
@@ -44,15 +44,13 @@
        (format t "~a" (sec-to-hm
 		       (subtract-seconds timeone (second-time)))))))
 
- (defun random-password (length)
-   (let* ((new-length (car (to-integer length)))
-	  (string (make-string new-length)))
-     (map-into string (lambda (sym)
-			(declare (ignore sym))
-			(aref *symbols* (random (length *symbols*)))))))
  (defun md5timestamp ()
    (md5:md5sum-string
-    (write-to-string (get-universal-time)))))
+    (write-to-string (get-universal-time))))
+
+ (defun random-string (length)
+   (let ((nw-length (car (to-integer length))))
+     (format nil "~{~a~}" (random-password nw-length)))))
 
 ;; INIT time functions
 
@@ -124,18 +122,28 @@ hour in seconds, minutes in seconds and the seconds."
       (error "Error: the last time is minor of first time.")
       (- timetwo timeone)))
 
-;; random-password-helper
-(defparameter *symbols*
-  (concatenate 'string
-	       "abcdefghijklmnopqrstuvwxyz"
-	       "0123456789"
-	       "ABCDEFGHIJKLMNOPQRSTUVWXYZ"
-	       "*./$%#@!+-[]&?"))
+;; random-string helper
 
 (defun to-integer (string-number)
   (if (stringp string-number)
       (multiple-value-bind (int-part count-part)
 	  (parse-integer string-number)
 	(list int-part count-part))))
+
+(defparameter *characters*
+  (concatenate 'string
+	       "abcdefghijklmnopqrstuvwxyz"
+	       "ABCDEFGHIJKLMNOPQRSTUVWXYZ"
+	       "0123456789"
+	       "!@#$%&/()=*-_.,;{}+[]"))
+
+(defun random-element (lst)
+  (aref lst (random (length lst))))
+
+(defun random-password (length)
+  (if (equal length 0)
+      nil
+      (cons (random-element *characters*)
+	    (random-password (- length 1)))))
 
 (register-commands :scripts/apps)
